@@ -24,6 +24,17 @@ dependencies:
   flutter:
     sdk: flutter
 
+  core:
+    path: ./core
+  movie:
+    path: ./movie
+  tv:
+    path: ./tv
+  search:
+    path: ./search
+  about:
+    path: ./about
+
   http: ^1.2.2
   provider: ^6.1.2
   dartz: ^0.10.1
@@ -34,10 +45,16 @@ dependencies:
   get_it: ^7.7.0
   sqflite: ^2.3.3+1
   path_provider: ^2.1.4
+  flutter_bloc: ^8.1.6
+  stream_transform: ^2.1.0
+  firebase_core: ^4.15.0
+  firebase_crashlytics: ^5.4.0
+  firebase_analytics: ^12.6.0
 
 dev_dependencies:
   mockito: ^5.0.8
   build_runner: ^2.0.4
+  bloc_test: ^9.1.7
   flutter_lints: ^3.0.0
   sqflite_common_ffi: ^2.3.3
   flutter_test:

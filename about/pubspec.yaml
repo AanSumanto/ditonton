@@ -1,0 +1,22 @@
+name: about
+description: About module for Ditonton app
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core:
+    path: ../core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  assets:
+    - assets/circle-g.png

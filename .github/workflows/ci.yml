@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install lcov
+        run: sudo apt-get update -qq && sudo apt-get install -y lcov
+
+      - name: Verify Flutter Version
+        run: flutter --version
+
+      - name: Analyze Root Project
+        run: |
+          flutter pub get
+          flutter analyze
+
+      - name: Analyze Core Package
+        run: |
+          cd core
+          flutter pub get
+          flutter analyze
+          cd ..
+
+      - name: Analyze Movie Package
+        run: |
+          cd movie
+          flutter pub get
+          flutter analyze
+          cd ..
+
+      - name: Analyze TV Package
+        run: |
+          cd tv
+          flutter pub get
+          flutter analyze
+          cd ..
+
+      - name: Analyze Search Package
+        run: |
+          cd search
+          flutter pub get
+          flutter analyze
+          cd ..
+
+      - name: Analyze About Package
+        run: |
+          cd about
+          flutter pub get
+          flutter analyze
+          cd ..
+
+      - name: Run Modular Tests with Coverage
+        run: |
+          chmod +x test.sh
+          ./test.sh

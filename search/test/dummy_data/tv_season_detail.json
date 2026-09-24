@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "name": "Season 1",
+  "overview": "Season 1 Overview",
+  "poster_path": "/poster.jpg",
+  "season_number": 1,
+  "episodes": [
+    {
+      "id": 1,
+      "name": "Episode 1",
+      "overview": "Overview",
+      "still_path": "/still.jpg",
+      "vote_average": 8.0,
+      "episode_number": 1,
+      "season_number": 1
+    }
+  ]
+}

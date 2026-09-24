@@ -49,12 +49,16 @@ runTests() {
 
 runReport() {
   if [ -f "coverage/test.info" ] && ! [ "$TRAVIS" ]; then
-    genhtml coverage/test.info -o coverage --no-function-coverage --prefix $(pwd)
+    if command -v genhtml >/dev/null 2>&1; then
+      genhtml coverage/test.info -o coverage --no-function-coverage --prefix $(pwd)
 
-    if [ "$(uname)" == "Darwin" ]; then
-      open coverage/index.html
+      if [ "$(uname)" == "Darwin" ]; then
+        open coverage/index.html
+      elif command -v start >/dev/null 2>&1; then
+        start coverage/index.html
+      fi
     else
-      start coverage/index.html
+      echo "genhtml not installed, combined coverage is in coverage/test.info"
     fi
   fi
 }
@@ -75,6 +79,7 @@ case $1 in
     if [ -d "coverage" ]; then
       rm -r coverage
     fi
+    mkdir -p coverage
     dirs=($(find . -maxdepth 2 -type d))
     for dir in "${dirs[@]}"; do
       runTests $dir $currentDir

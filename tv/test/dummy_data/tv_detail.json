@@ -1,0 +1,29 @@
+{
+  "backdrop_path": "backdropPath",
+  "first_air_date": "2021-01-01",
+  "genres": [
+    {
+      "id": 1,
+      "name": "Action"
+    }
+  ],
+  "id": 1,
+  "name": "Name",
+  "number_of_episodes": 10,
+  "number_of_seasons": 1,
+  "overview": "Overview",
+  "poster_path": "posterPath",
+  "seasons": [
+    {
+      "air_date": "2021-01-01",
+      "episode_count": 10,
+      "id": 1,
+      "name": "Season 1",
+      "overview": "overview",
+      "poster_path": "/poster.jpg",
+      "season_number": 1
+    }
+  ],
+  "vote_average": 1.0,
+  "vote_count": 1
+}
