@@ -105,4 +105,48 @@ void main() {
     expect(find.byType(AlertDialog), findsOneWidget);
     expect(find.text('Failed'), findsOneWidget);
   });
+
+  testWidgets('Page should display recommendation loading and error',
+      (WidgetTester tester) async {
+    when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movie).thenReturn(testMovieDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loading);
+    when(mockNotifier.movieRecommendations).thenReturn(<Movie>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+    expect(find.byType(CircularProgressIndicator), findsWidgets);
+
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Error);
+    when(mockNotifier.message).thenReturn('Error Rec');
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+    expect(find.text('Error Rec'), findsOneWidget);
+  });
+
+  testWidgets('Page should display recommendations and back button tap',
+      (WidgetTester tester) async {
+    when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movie).thenReturn(testMovieDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movieRecommendations).thenReturn(<Movie>[testMovie]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider<MovieDetailNotifier>.value(
+        value: mockNotifier,
+        child: MaterialApp(
+          routes: {
+            '/': (context) => MovieDetailPage(id: 1),
+          },
+        ),
+      ),
+    );
+
+    expect(find.byType(ListView), findsWidgets);
+
+    // Tap back button
+    final backButton = find.byIcon(Icons.arrow_back);
+    expect(backButton, findsOneWidget);
+    await tester.tap(backButton);
+  });
 }

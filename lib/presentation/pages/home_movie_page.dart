@@ -3,6 +3,8 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
+import 'package:ditonton/presentation/pages/home_tv_page.dart';
+import 'package:ditonton/presentation/pages/watchlist_tv_page.dart';
 import 'package:ditonton/presentation/pages/popular_movies_page.dart';
 import 'package:ditonton/presentation/pages/search_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
@@ -53,10 +55,24 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
               },
             ),
             ListTile(
+              leading: Icon(Icons.tv),
+              title: Text('TV Series'),
+              onTap: () {
+                Navigator.pushNamed(context, HomeTvPage.ROUTE_NAME);
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.save_alt),
-              title: Text('Watchlist'),
+              title: Text('Movie Watchlist'),
               onTap: () {
                 Navigator.pushNamed(context, WatchlistMoviesPage.ROUTE_NAME);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.bookmarks_outlined),
+              title: Text('TV Series Watchlist'),
+              onTap: () {
+                Navigator.pushNamed(context, WatchlistTvPage.ROUTE_NAME);
               },
             ),
             ListTile(

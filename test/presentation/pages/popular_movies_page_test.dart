@@ -8,6 +8,9 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import 'package:ditonton/presentation/widgets/movie_card_list.dart';
+
+import '../../dummy_data/dummy_objects.dart';
 import 'popular_movies_page_test.mocks.dart';
 
 @GenerateMocks([PopularMoviesNotifier])
@@ -43,13 +46,14 @@ void main() {
   testWidgets('Page should display ListView when data is loaded',
       (WidgetTester tester) async {
     when(mockNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockNotifier.movies).thenReturn(<Movie>[]);
+    when(mockNotifier.movies).thenReturn(<Movie>[testMovie]);
 
     final listViewFinder = find.byType(ListView);
 
     await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
 
     expect(listViewFinder, findsOneWidget);
+    expect(find.byType(MovieCard), findsOneWidget);
   });
 
   testWidgets('Page should display text with message when Error',

@@ -1,7 +1,11 @@
 import 'package:ditonton/data/models/movie_table.dart';
+import 'package:ditonton/data/models/tv_table.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
+import 'package:ditonton/domain/entities/season.dart';
+import 'package:ditonton/domain/entities/tv.dart';
+import 'package:ditonton/domain/entities/tv_detail.dart';
 
 final testMovie = Movie(
   adult: false,
@@ -56,4 +60,68 @@ final testMovieMap = {
   'overview': 'overview',
   'posterPath': 'posterPath',
   'title': 'title',
+};
+
+final testSeason = Season(
+  airDate: '2021-01-01',
+  episodeCount: 10,
+  id: 1,
+  name: 'Season 1',
+  overview: 'overview',
+  posterPath: '/poster.jpg',
+  seasonNumber: 1,
+);
+
+final testTv = Tv(
+  backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
+  genreIds: [14, 28],
+  id: 1,
+  name: 'Name',
+  originCountry: ['US'],
+  originalLanguage: 'en',
+  originalName: 'Original Name',
+  overview: 'Overview',
+  popularity: 1.0,
+  posterPath: '/rweIrveL43TaxUN0akQEaAXL6x0.jpg',
+  firstAirDate: '2021-01-01',
+  voteAverage: 1.0,
+  voteCount: 1,
+);
+
+final testTvList = [testTv];
+
+final testTvDetail = TvDetail(
+  backdropPath: 'backdropPath',
+  genres: [Genre(id: 1, name: 'Action')],
+  id: 1,
+  name: 'Name',
+  numberOfEpisodes: 10,
+  numberOfSeasons: 1,
+  overview: 'Overview',
+  posterPath: 'posterPath',
+  firstAirDate: '2021-01-01',
+  voteAverage: 1.0,
+  voteCount: 1,
+  seasons: [testSeason],
+);
+
+final testWatchlistTv = Tv.watchlist(
+  id: 1,
+  name: 'Name',
+  posterPath: 'posterPath',
+  overview: 'Overview',
+);
+
+final testTvTable = TvTable(
+  id: 1,
+  name: 'Name',
+  posterPath: 'posterPath',
+  overview: 'Overview',
+);
+
+final testTvMap = {
+  'id': 1,
+  'overview': 'Overview',
+  'posterPath': 'posterPath',
+  'name': 'Name',
 };
