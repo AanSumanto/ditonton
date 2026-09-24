@@ -94,10 +94,14 @@ void main() {
             '/': (context) => HomeMoviePage(),
             '/detail': (context) => Scaffold(body: Text('Movie Detail Page')),
             '/search': (context) => Scaffold(body: Text('Search Page')),
-            '/popular-movie': (context) => Scaffold(body: Text('Popular Movie Page')),
-            '/top-rated-movie': (context) => Scaffold(body: Text('Top Rated Movie Page')),
-            '/watchlist-movie': (context) => Scaffold(body: Text('Watchlist Movie Page')),
-            '/watchlist-tv': (context) => Scaffold(body: Text('Watchlist Tv Page')),
+            '/popular-movie': (context) =>
+                Scaffold(body: Text('Popular Movie Page')),
+            '/top-rated-movie': (context) =>
+                Scaffold(body: Text('Top Rated Movie Page')),
+            '/watchlist-movie': (context) =>
+                Scaffold(body: Text('Watchlist Movie Page')),
+            '/watchlist-tv': (context) =>
+                Scaffold(body: Text('Watchlist Tv Page')),
             '/about': (context) => Scaffold(body: Text('About Page')),
             '/home-tv': (context) => Scaffold(body: Text('Home Tv Page')),
           },
@@ -156,8 +160,10 @@ void main() {
           routes: {
             '/': (context) => HomeMoviePage(),
             '/home-tv': (context) => Scaffold(body: Text('TV Series Page')),
-            '/watchlist-movie': (context) => Scaffold(body: Text('Watchlist Movie Page')),
-            '/watchlist-tv': (context) => Scaffold(body: Text('Watchlist Tv Page')),
+            '/watchlist-movie': (context) =>
+                Scaffold(body: Text('Watchlist Movie Page')),
+            '/watchlist-tv': (context) =>
+                Scaffold(body: Text('Watchlist Tv Page')),
             '/about': (context) => Scaffold(body: Text('About Page')),
           },
         ),
@@ -165,7 +171,8 @@ void main() {
     );
 
     // Open drawer
-    final scaffoldState = tester.firstState<ScaffoldState>(find.byType(Scaffold));
+    final scaffoldState =
+        tester.firstState<ScaffoldState>(find.byType(Scaffold));
     scaffoldState.openDrawer();
     await tester.pumpAndSettle();
 

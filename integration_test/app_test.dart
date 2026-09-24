@@ -6,7 +6,8 @@ import 'package:ditonton/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Integration Test: Navigate between Movies, TV Series, and Search',
+  testWidgets(
+      'Integration Test: Navigate between Movies, TV Series, and Search',
       (WidgetTester tester) async {
     app.main();
     await tester.pumpAndSettle();

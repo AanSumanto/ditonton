@@ -1,8 +1,10 @@
 import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/domain/entities/season_detail.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
 import 'package:ditonton/domain/usecases/get_tv_detail.dart';
 import 'package:ditonton/domain/usecases/get_tv_recommendations.dart';
+import 'package:ditonton/domain/usecases/get_tv_season_detail.dart';
 import 'package:ditonton/domain/usecases/get_watchlist_tv_status.dart';
 import 'package:ditonton/domain/usecases/remove_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/save_watchlist_tv.dart';
@@ -15,6 +17,7 @@ class TvDetailNotifier extends ChangeNotifier {
 
   final GetTvDetail getTvDetail;
   final GetTvRecommendations getTvRecommendations;
+  final GetTvSeasonDetail getTvSeasonDetail;
   final GetWatchlistTvStatus getWatchListStatus;
   final SaveWatchlistTv saveWatchlist;
   final RemoveWatchlistTv removeWatchlist;
@@ -22,10 +25,20 @@ class TvDetailNotifier extends ChangeNotifier {
   TvDetailNotifier({
     required this.getTvDetail,
     required this.getTvRecommendations,
+    required this.getTvSeasonDetail,
     required this.getWatchListStatus,
     required this.saveWatchlist,
     required this.removeWatchlist,
   });
+
+  SeasonDetail? _seasonDetail;
+  SeasonDetail? get seasonDetail => _seasonDetail;
+
+  RequestState _seasonState = RequestState.Empty;
+  RequestState get seasonState => _seasonState;
+
+  int _selectedSeasonNumber = 1;
+  int get selectedSeasonNumber => _selectedSeasonNumber;
 
   late TvDetail _tv;
   TvDetail get tv => _tv;
@@ -71,6 +84,26 @@ class TvDetailNotifier extends ChangeNotifier {
           },
         );
         _tvState = RequestState.Loaded;
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> fetchTvSeasonDetail(int id, int seasonNumber) async {
+    _selectedSeasonNumber = seasonNumber;
+    _seasonState = RequestState.Loading;
+    notifyListeners();
+
+    final result = await getTvSeasonDetail.execute(id, seasonNumber);
+    result.fold(
+      (failure) {
+        _seasonState = RequestState.Error;
+        _message = failure.message;
+        notifyListeners();
+      },
+      (seasonData) {
+        _seasonState = RequestState.Loaded;
+        _seasonDetail = seasonData;
         notifyListeners();
       },
     );

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ditonton/common/exception.dart';
 import 'package:ditonton/data/datasources/tv_remote_data_source.dart';
+import 'package:ditonton/data/models/season_detail_response.dart';
 import 'package:ditonton/data/models/tv_detail_model.dart';
 import 'package:ditonton/data/models/tv_response.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,8 +32,7 @@ void main() {
     test('should return list of Tv Model when the response code is 200',
         () async {
       // arrange
-      when(mockHttpClient
-              .get(Uri.parse('$BASE_URL/tv/on_the_air?$API_KEY')))
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/tv/on_the_air?$API_KEY')))
           .thenAnswer((_) async =>
               http.Response(readJson('dummy_data/tv_on_the_air.json'), 200));
       // act
@@ -45,8 +45,7 @@ void main() {
         'should throw a ServerException when the response code is 404 or other',
         () async {
       // arrange
-      when(mockHttpClient
-              .get(Uri.parse('$BASE_URL/tv/on_the_air?$API_KEY')))
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/tv/on_the_air?$API_KEY')))
           .thenAnswer((_) async => http.Response('Not Found', 404));
       // act
       final call = dataSource.getNowPlayingTv();
@@ -90,8 +89,7 @@ void main() {
             json.decode(readJson('dummy_data/tv_top_rated.json')))
         .tvList;
 
-    test('should return list of Tv Model when response code is 200',
-        () async {
+    test('should return list of Tv Model when response code is 200', () async {
       // arrange
       when(mockHttpClient.get(Uri.parse('$BASE_URL/tv/top_rated?$API_KEY')))
           .thenAnswer((_) async =>
@@ -153,8 +151,8 @@ void main() {
       // arrange
       when(mockHttpClient
               .get(Uri.parse('$BASE_URL/tv/$tId/recommendations?$API_KEY')))
-          .thenAnswer((_) async =>
-              http.Response(readJson('dummy_data/tv_recommendations.json'), 200));
+          .thenAnswer((_) async => http.Response(
+              readJson('dummy_data/tv_recommendations.json'), 200));
       // act
       final result = await dataSource.getTvRecommendations(tId);
       // assert
@@ -175,9 +173,9 @@ void main() {
   });
 
   group('search Tv', () {
-    final tSearchResult = TvResponse.fromJson(
-            json.decode(readJson('dummy_data/tv_search.json')))
-        .tvList;
+    final tSearchResult =
+        TvResponse.fromJson(json.decode(readJson('dummy_data/tv_search.json')))
+            .tvList;
     final tQuery = 'Name';
 
     test('should return list of Tv Model when response code is 200', () async {
@@ -200,6 +198,38 @@ void main() {
           .thenAnswer((_) async => http.Response('Not Found', 404));
       // act
       final call = dataSource.searchTv(tQuery);
+      // assert
+      expect(() => call, throwsA(isA<ServerException>()));
+    });
+  });
+
+  group('get Tv Season Detail', () {
+    final tId = 1;
+    final tSeasonNumber = 1;
+    final tSeasonDetail = SeasonDetailResponse.fromJson(
+        json.decode(readJson('dummy_data/tv_season_detail.json')));
+
+    test('should return Tv season detail when the response code is 200',
+        () async {
+      // arrange
+      when(mockHttpClient.get(
+              Uri.parse('$BASE_URL/tv/$tId/season/$tSeasonNumber?$API_KEY')))
+          .thenAnswer((_) async =>
+              http.Response(readJson('dummy_data/tv_season_detail.json'), 200));
+      // act
+      final result = await dataSource.getTvSeasonDetail(tId, tSeasonNumber);
+      // assert
+      expect(result, equals(tSeasonDetail));
+    });
+
+    test('should throw ServerException when the response code is 404 or other',
+        () async {
+      // arrange
+      when(mockHttpClient.get(
+              Uri.parse('$BASE_URL/tv/$tId/season/$tSeasonNumber?$API_KEY')))
+          .thenAnswer((_) async => http.Response('Not Found', 404));
+      // act
+      final call = dataSource.getTvSeasonDetail(tId, tSeasonNumber);
       // assert
       expect(() => call, throwsA(isA<ServerException>()));
     });

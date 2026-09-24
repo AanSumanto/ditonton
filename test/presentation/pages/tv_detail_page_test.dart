@@ -15,6 +15,9 @@ void main() {
 
   setUp(() {
     mockNotifier = MockTvDetailNotifier();
+    when(mockNotifier.selectedSeasonNumber).thenReturn(1);
+    when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.seasonDetail).thenReturn(testSeasonDetail);
   });
 
   Widget _makeTestableWidget(Widget body) {
@@ -166,5 +169,43 @@ void main() {
     final backButton = find.byIcon(Icons.arrow_back);
     expect(backButton, findsOneWidget);
     await tester.tap(backButton);
+  });
+
+  testWidgets('Page should display season list and episodes when loaded',
+      (WidgetTester tester) async {
+    when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tv).thenReturn(testTvDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvRecommendations).thenReturn(<Tv>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+    when(mockNotifier.seasonState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.seasonDetail).thenReturn(testSeasonDetail);
+    when(mockNotifier.selectedSeasonNumber).thenReturn(1);
+
+    await tester.pumpWidget(_makeTestableWidget(TvDetailPage(id: 1)));
+
+    expect(find.text('Seasons'), findsOneWidget);
+    expect(find.text('Episodes'), findsOneWidget);
+    expect(find.text('E1. Episode 1'), findsOneWidget);
+
+    final seasonCard = find.byKey(Key('season_1'));
+    expect(seasonCard, findsOneWidget);
+    await tester.tap(seasonCard, warnIfMissed: false);
+    verify(mockNotifier.fetchTvSeasonDetail(1, 1));
+  });
+
+  testWidgets('Page should display season error when season fails',
+      (WidgetTester tester) async {
+    when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tv).thenReturn(testTvDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvRecommendations).thenReturn(<Tv>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+    when(mockNotifier.seasonState).thenReturn(RequestState.Error);
+    when(mockNotifier.message).thenReturn('Failed to load season');
+
+    await tester.pumpWidget(_makeTestableWidget(TvDetailPage(id: 1)));
+
+    expect(find.text('Failed to load season'), findsOneWidget);
   });
 }

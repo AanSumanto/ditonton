@@ -10,6 +10,7 @@ import 'package:ditonton/domain/usecases/get_popular_tv.dart';
 import 'package:ditonton/domain/usecases/get_top_rated_tv.dart';
 import 'package:ditonton/domain/usecases/get_tv_detail.dart';
 import 'package:ditonton/domain/usecases/get_tv_recommendations.dart';
+import 'package:ditonton/domain/usecases/get_tv_season_detail.dart';
 import 'package:ditonton/domain/usecases/get_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/get_watchlist_tv_status.dart';
 import 'package:ditonton/domain/usecases/remove_watchlist_tv.dart';
@@ -42,6 +43,7 @@ import 'package:http/http.dart' as http;
   GetTopRatedTv,
   GetTvDetail,
   GetTvRecommendations,
+  GetTvSeasonDetail,
   SearchTv,
   GetWatchlistTv,
   GetWatchlistTvStatus,

@@ -94,11 +94,15 @@ void main() {
             '/': (context) => HomeTvPage(),
             '/detail-tv': (context) => Scaffold(body: Text('Tv Detail Page')),
             '/search-tv': (context) => Scaffold(body: Text('Tv Search Page')),
-            '/now-playing-tv': (context) => Scaffold(body: Text('Now Playing Tv Page')),
+            '/now-playing-tv': (context) =>
+                Scaffold(body: Text('Now Playing Tv Page')),
             '/popular-tv': (context) => Scaffold(body: Text('Popular Tv Page')),
-            '/top-rated-tv': (context) => Scaffold(body: Text('Top Rated Tv Page')),
-            '/watchlist-movie': (context) => Scaffold(body: Text('Watchlist Movie Page')),
-            '/watchlist-tv': (context) => Scaffold(body: Text('Watchlist Tv Page')),
+            '/top-rated-tv': (context) =>
+                Scaffold(body: Text('Top Rated Tv Page')),
+            '/watchlist-movie': (context) =>
+                Scaffold(body: Text('Watchlist Movie Page')),
+            '/watchlist-tv': (context) =>
+                Scaffold(body: Text('Watchlist Tv Page')),
             '/about': (context) => Scaffold(body: Text('About Page')),
             '/home': (context) => Scaffold(body: Text('Movies Home Page')),
           },
@@ -109,10 +113,12 @@ void main() {
     expect(find.byType(TvList), findsNWidgets(3));
 
     // Tap first Tv item in TvList
-    final tvItemFinder = find.descendant(
-      of: find.byType(TvList),
-      matching: find.byType(InkWell),
-    ).first;
+    final tvItemFinder = find
+        .descendant(
+          of: find.byType(TvList),
+          matching: find.byType(InkWell),
+        )
+        .first;
     await tester.tap(tvItemFinder);
     await tester.pumpAndSettle();
     expect(find.text('Tv Detail Page'), findsOneWidget);
@@ -133,9 +139,11 @@ void main() {
         child: MaterialApp(
           routes: {
             '/': (context) => HomeTvPage(),
-            '/now-playing-tv': (context) => Scaffold(body: Text('Now Playing Tv Page')),
+            '/now-playing-tv': (context) =>
+                Scaffold(body: Text('Now Playing Tv Page')),
             '/popular-tv': (context) => Scaffold(body: Text('Popular Tv Page')),
-            '/top-rated-tv': (context) => Scaffold(body: Text('Top Rated Tv Page')),
+            '/top-rated-tv': (context) =>
+                Scaffold(body: Text('Top Rated Tv Page')),
             '/search-tv': (context) => Scaffold(body: Text('Tv Search Page')),
           },
         ),
@@ -148,8 +156,7 @@ void main() {
     expect(find.text('Tv Search Page'), findsOneWidget);
   });
 
-  testWidgets('Drawer items should be clickable',
-      (WidgetTester tester) async {
+  testWidgets('Drawer items should be clickable', (WidgetTester tester) async {
     when(mockNotifier.nowPlayingState).thenReturn(RequestState.Loaded);
     when(mockNotifier.nowPlayingTv).thenReturn(<Tv>[]);
     when(mockNotifier.popularTvState).thenReturn(RequestState.Loaded);
@@ -164,8 +171,10 @@ void main() {
           routes: {
             '/': (context) => HomeTvPage(),
             '/home': (context) => Scaffold(body: Text('Movies Home Page')),
-            '/watchlist-movie': (context) => Scaffold(body: Text('Watchlist Movie Page')),
-            '/watchlist-tv': (context) => Scaffold(body: Text('Watchlist Tv Page')),
+            '/watchlist-movie': (context) =>
+                Scaffold(body: Text('Watchlist Movie Page')),
+            '/watchlist-tv': (context) =>
+                Scaffold(body: Text('Watchlist Tv Page')),
             '/about': (context) => Scaffold(body: Text('About Page')),
           },
         ),
@@ -173,7 +182,8 @@ void main() {
     );
 
     // Open drawer
-    final scaffoldState = tester.firstState<ScaffoldState>(find.byType(Scaffold));
+    final scaffoldState =
+        tester.firstState<ScaffoldState>(find.byType(Scaffold));
     scaffoldState.openDrawer();
     await tester.pumpAndSettle();
 

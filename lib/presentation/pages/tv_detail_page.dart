@@ -29,6 +29,8 @@ class _TvDetailPageState extends State<TvDetailPage> {
           .fetchTvDetail(widget.id);
       Provider.of<TvDetailNotifier>(context, listen: false)
           .loadWatchlistStatus(widget.id);
+      Provider.of<TvDetailNotifier>(context, listen: false)
+          .fetchTvSeasonDetail(widget.id, 1);
     });
   }
 
@@ -109,21 +111,19 @@ class DetailContent extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
-                                  await Provider.of<TvDetailNotifier>(
-                                          context,
+                                  await Provider.of<TvDetailNotifier>(context,
                                           listen: false)
                                       .addWatchlist(tv);
                                 } else {
-                                  await Provider.of<TvDetailNotifier>(
-                                          context,
+                                  await Provider.of<TvDetailNotifier>(context,
                                           listen: false)
                                       .removeFromWatchlist(tv);
                                 }
 
-                                final message =
-                                    Provider.of<TvDetailNotifier>(context,
-                                            listen: false)
-                                        .watchlistMessage;
+                                final message = Provider.of<TvDetailNotifier>(
+                                        context,
+                                        listen: false)
+                                    .watchlistMessage;
 
                                 if (message ==
                                         TvDetailNotifier
@@ -188,7 +188,13 @@ class DetailContent extends StatelessWidget {
                               'Seasons',
                               style: kHeading6,
                             ),
-                            _buildSeasonsList(tv.seasons),
+                            _buildSeasonsList(context, tv.id, tv.seasons),
+                            SizedBox(height: 16),
+                            Text(
+                              'Episodes',
+                              style: kHeading6,
+                            ),
+                            _buildEpisodesList(),
                             SizedBox(height: 16),
                             Text(
                               'Recommendations',
@@ -288,65 +294,195 @@ class DetailContent extends StatelessWidget {
     );
   }
 
-  Widget _buildSeasonsList(List<Season> seasons) {
+  Widget _buildSeasonsList(
+      BuildContext context, int tvId, List<Season> seasons) {
     if (seasons.isEmpty) {
       return Text('No seasons information available.');
     }
-    return Container(
-      height: 140,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: seasons.length,
-        itemBuilder: (context, index) {
-          final season = seasons[index];
-          return Container(
-            width: 90,
-            margin: const EdgeInsets.only(right: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: season.posterPath != null
-                      ? CachedNetworkImage(
-                          imageUrl:
-                              'https://image.tmdb.org/t/p/w200${season.posterPath}',
-                          height: 100,
-                          width: 90,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            height: 100,
-                            width: 90,
-                            color: Colors.grey.shade800,
-                            child: Icon(Icons.tv, color: Colors.white),
-                          ),
-                        )
-                      : Container(
-                          height: 100,
-                          width: 90,
-                          color: Colors.grey.shade800,
-                          child: Icon(Icons.tv, color: Colors.white),
+    return Consumer<TvDetailNotifier>(
+      builder: (context, notifier, _) {
+        return Container(
+          height: 150,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: seasons.length,
+            itemBuilder: (context, index) {
+              final season = seasons[index];
+              final isSelected =
+                  season.seasonNumber == notifier.selectedSeasonNumber;
+              return InkWell(
+                key: Key('season_${season.seasonNumber}'),
+                onTap: () {
+                  Provider.of<TvDetailNotifier>(context, listen: false)
+                      .fetchTvSeasonDetail(tvId, season.seasonNumber);
+                },
+                child: Container(
+                  width: 90,
+                  margin: const EdgeInsets.only(right: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: isSelected
+                        ? Border.all(color: kMikadoYellow, width: 2)
+                        : null,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: season.posterPath != null
+                            ? CachedNetworkImage(
+                                imageUrl:
+                                    'https://image.tmdb.org/t/p/w200${season.posterPath}',
+                                height: 100,
+                                width: 90,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 100,
+                                  width: 90,
+                                  color: Colors.grey.shade800,
+                                  child: Icon(Icons.tv, color: Colors.white),
+                                ),
+                              )
+                            : Container(
+                                height: 100,
+                                width: 90,
+                                color: Colors.grey.shade800,
+                                child: Icon(Icons.tv, color: Colors.white),
+                              ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        season.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: isSelected ? kMikadoYellow : Colors.white,
                         ),
+                      ),
+                      Text(
+                        '${season.episodeCount} Ep.',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  season.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                ),
-                Text(
-                  '${season.episodeCount} Ep.',
-                  style: TextStyle(fontSize: 10, color: Colors.grey),
-                ),
-              ],
-            ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildEpisodesList() {
+    return Consumer<TvDetailNotifier>(
+      builder: (context, notifier, _) {
+        if (notifier.seasonState == RequestState.Loading) {
+          return Center(
+            child: CircularProgressIndicator(),
           );
-        },
-      ),
+        } else if (notifier.seasonState == RequestState.Loaded) {
+          final seasonDetail = notifier.seasonDetail;
+          if (seasonDetail == null || seasonDetail.episodes.isEmpty) {
+            return Text('No episodes available.');
+          }
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: seasonDetail.episodes.length,
+            itemBuilder: (context, index) {
+              final episode = seasonDetail.episodes[index];
+              return Card(
+                color: Colors.grey.shade900,
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: episode.stillPath != null
+                            ? CachedNetworkImage(
+                                imageUrl:
+                                    'https://image.tmdb.org/t/p/w200${episode.stillPath}',
+                                width: 100,
+                                height: 60,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  width: 100,
+                                  height: 60,
+                                  color: Colors.grey.shade800,
+                                  child: Icon(Icons.tv, color: Colors.white),
+                                ),
+                              )
+                            : Container(
+                                width: 100,
+                                height: 60,
+                                color: Colors.grey.shade800,
+                                child: Icon(Icons.tv, color: Colors.white),
+                              ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'E${episode.episodeNumber}. ${episode.name}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Icon(Icons.star,
+                                    color: kMikadoYellow, size: 14),
+                                SizedBox(width: 4),
+                                Text(
+                                  '${episode.voteAverage}',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              episode.overview.isNotEmpty
+                                  ? episode.overview
+                                  : 'No overview available.',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        } else if (notifier.seasonState == RequestState.Error) {
+          return Text(notifier.message);
+        } else {
+          return Container();
+        }
+      },
     );
   }
 

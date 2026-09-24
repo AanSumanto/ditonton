@@ -217,7 +217,8 @@ void main() {
       expect(listenerCallCount, 1);
     });
 
-    test('should update watchlist status when remove watchlist success', () async {
+    test('should update watchlist status when remove watchlist success',
+        () async {
       // arrange
       when(mockRemoveWatchlist.execute(testMovieDetail))
           .thenAnswer((_) async => Right('Removed from Watchlist'));
@@ -232,7 +233,8 @@ void main() {
       expect(listenerCallCount, 1);
     });
 
-    test('should update watchlist message when remove watchlist failed', () async {
+    test('should update watchlist message when remove watchlist failed',
+        () async {
       // arrange
       when(mockRemoveWatchlist.execute(testMovieDetail))
           .thenAnswer((_) async => Left(DatabaseFailure('Failed')));

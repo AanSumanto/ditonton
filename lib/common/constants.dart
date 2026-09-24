@@ -11,6 +11,14 @@ const Color kMikadoYellow = Color(0xFFffc300);
 const Color kDavysGrey = Color(0xFF4B5358);
 const Color kGrey = Color(0xFF303030);
 
+// Preferred names without Hungarian notation prefix
+const Color richBlack = kRichBlack;
+const Color oxfordBlue = kOxfordBlue;
+const Color prussianBlue = kPrussianBlue;
+const Color mikadoYellow = kMikadoYellow;
+const Color davysGrey = kDavysGrey;
+const Color grey = kGrey;
+
 // text style
 final TextStyle kHeading5 =
     GoogleFonts.poppins(fontSize: 23, fontWeight: FontWeight.w400);
@@ -21,6 +29,11 @@ final TextStyle kSubtitle = GoogleFonts.poppins(
 final TextStyle kBodyText = GoogleFonts.poppins(
     fontSize: 13, fontWeight: FontWeight.w400, letterSpacing: 0.25);
 
+final TextStyle heading5 = kHeading5;
+final TextStyle heading6 = kHeading6;
+final TextStyle subtitle = kSubtitle;
+final TextStyle bodyText = kBodyText;
+
 // text theme
 final kTextTheme = TextTheme(
   headlineMedium: kHeading5,
@@ -28,10 +41,12 @@ final kTextTheme = TextTheme(
   labelMedium: kSubtitle,
   bodyMedium: kBodyText,
 );
+final textTheme = kTextTheme;
 
 final kDrawerTheme = DrawerThemeData(
   backgroundColor: Colors.grey.shade700,
 );
+final drawerTheme = kDrawerTheme;
 
 const kColorScheme = ColorScheme(
   primary: kMikadoYellow,
@@ -45,3 +60,4 @@ const kColorScheme = ColorScheme(
   onError: Colors.white,
   brightness: Brightness.dark,
 );
+const colorScheme = kColorScheme;

@@ -64,7 +64,8 @@ void main() {
     verify(mockNotifier.fetchTvSearch('game of thrones'));
   });
 
-  testWidgets('Page should display empty container when state is not loading/loaded',
+  testWidgets(
+      'Page should display empty container when state is not loading/loaded',
       (WidgetTester tester) async {
     when(mockNotifier.state).thenReturn(RequestState.Empty);
 
