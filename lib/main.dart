@@ -86,7 +86,30 @@ class MyApp extends StatelessWidget {
           textTheme: kTextTheme,
           drawerTheme: kDrawerTheme,
         ),
-        home: HomeMoviePage(),
+        home: Stack(
+          children: [
+            HomeMoviePage(),
+            Positioned(
+              bottom: 24,
+              right: 16,
+              child: FloatingActionButton.extended(
+                heroTag: 'crashlytics_test_button',
+                backgroundColor: Colors.redAccent,
+                icon: const Icon(Icons.bug_report, color: Colors.white),
+                label: const Text(
+                  'Test Crash',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  FirebaseCrashlytics.instance.crash();
+                },
+              ),
+            ),
+          ],
+        ),
         navigatorObservers: [
           routeObserver,
           FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
