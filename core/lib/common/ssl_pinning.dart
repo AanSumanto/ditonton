@@ -5,7 +5,18 @@ import 'package:http/io_client.dart';
 
 class HttpSSLPinning {
   static http.Client? _clientInstance;
-  static http.Client get client => _clientInstance ?? http.Client();
+  static http.Client get client {
+    if (_clientInstance == null) {
+      throw StateError(
+        'HttpSSLPinning has not been initialized. Call `await HttpSSLPinning.init()` in main() before accessing `HttpSSLPinning.client`.',
+      );
+    }
+    return _clientInstance!;
+  }
+
+  static void resetForTesting() {
+    _clientInstance = null;
+  }
 
   static Future<http.Client> get _instance async =>
       _clientInstance ??= await createLEClient();
@@ -32,19 +43,25 @@ class HttpSSLPinning {
         bytes = file.readAsBytesSync();
       } else {
         try {
-          bytes = (await rootBundle.load('assets/certificates.pem'))
+          bytes = (await rootBundle.load('packages/core/assets/certificates.pem'))
               .buffer
               .asUint8List();
         } catch (_) {
-          var file = File('assets/certificates.pem');
-          if (!file.existsSync()) {
-            file = File('../assets/certificates.pem');
-          }
-          if (!file.existsSync()) {
-            file = File('../../assets/certificates.pem');
-          }
-          if (file.existsSync()) {
-            bytes = file.readAsBytesSync();
+          try {
+            bytes = (await rootBundle.load('assets/certificates.pem'))
+                .buffer
+                .asUint8List();
+          } catch (_) {
+            var file = File('assets/certificates.pem');
+            if (!file.existsSync()) {
+              file = File('../assets/certificates.pem');
+            }
+            if (!file.existsSync()) {
+              file = File('../../assets/certificates.pem');
+            }
+            if (file.existsSync()) {
+              bytes = file.readAsBytesSync();
+            }
           }
         }
       }

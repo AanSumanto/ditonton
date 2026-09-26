@@ -16,6 +16,7 @@ import 'dart:ui';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await HttpSSLPinning.init();
   try {
     await Firebase.initializeApp();
     FlutterError.onError = (errorDetails) {

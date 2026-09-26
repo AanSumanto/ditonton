@@ -1,3 +1,4 @@
+import 'package:http/http.dart' as http;
 import 'package:core/core.dart';
 import 'package:movie/movie.dart';
 import 'package:tv/tv.dart';
@@ -195,5 +196,5 @@ void init() {
   locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
   // external - SSL Pinning
-  locator.registerLazySingleton(() => HttpSSLPinning.client);
+  locator.registerLazySingleton<http.Client>(() => HttpSSLPinning.client);
 }
